@@ -2,7 +2,7 @@
 // ----------------------------------------
 // REQUIRED MODULES
 const http = require('http');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const url = require('url');
 
 // ----------------------------------------
@@ -66,9 +66,7 @@ dbConnection.connect((err) => {
   });
 });
 
-// ----------------------------------------
-// CREATE THE HTTP SERVER (NO EXPRESS)
-// ----------------------------------------
+
 const server = http.createServer((req, res) => {
   // Enable CORS to allow cross-origin requests from server1.
   // Here we allow all origins with '*' but you could restrict it if needed.
@@ -156,7 +154,7 @@ function processQuery(queryText, res) {
 // ----------------------------------------
 // START THE SERVER
 // ----------------------------------------
-const PORT = 3000;
+const PORT = 8080;
 server.listen(PORT, () => {
   console.log(`Server2 is running on port ${PORT}`);
 });
