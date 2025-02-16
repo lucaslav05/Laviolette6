@@ -9,7 +9,7 @@ const url = require('url');
 // CONFIGURATION STRINGS (do not use "var")
 const dbConfig = {
   host: '157.230.14.38',
-  user: 'root',      
+  user: 'lab5user',      
   password: 'Jackjohn1',  
   database: 'Lab5'
 };
