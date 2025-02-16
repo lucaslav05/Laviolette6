@@ -47,13 +47,13 @@ dbConnection.connect((err) => {
 
       // Create the 'patient' table if it doesn't exist
       const createTableQuery = `
-        CREATE TABLE IF NOT EXISTS patient (
+        DROP TABLE IF EXISTS patient;
+        CREATE TABLE patient (
             patientid INT(11) NOT NULL AUTO_INCREMENT,
             name VARCHAR(100) NOT NULL,
             dateOfBirth DATETIME,
             PRIMARY KEY (patientid)
-            ) ENGINE=InnoDB;
-
+        ) ENGINE=InnoDB;
       `;
       dbConnection.query(createTableQuery, (err) => {
         if (err) {
