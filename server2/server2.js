@@ -4,7 +4,7 @@
 const http = require('http');
 const mysql = require('mysql2');
 const url = require('url');
-const messages = require('./lang/en/en');  // Import the messages
+const messages = require('./lang/en/en');
 
 // ----------------------------------------
 // CONFIGURATION STRINGS (do not use "var")

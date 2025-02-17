@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "mysql2": "^3.12.0"
+  },
+
+  "name": "my-node-app",
+  "version": "20.18.0",
+  "main": "server2.js",
+  "scripts": {
+      "start": "node server2/server2.js"
+  }
+}
