@@ -122,13 +122,52 @@ function processQuery(queryText, res) {
   }
 
   if (lowerQuery.startsWith("select") || lowerQuery.startsWith("insert")) {
-    dbConnection.query(queryText, (err, results) => {
+    // Check if the table exists before running the query
+    dbConnection.query('SHOW TABLES LIKE "patient"', (err, results) => {
       if (err) {
         res.writeHead(500, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: messages.error.queryExecutionError, details: err.message }));
+        return;
+      }
+
+      if (results.length === 0) {
+        // If the table doesn't exist, create it
+        const createTableQuery = `
+          CREATE TABLE patient (
+            patientid INT(11) NOT NULL AUTO_INCREMENT,
+            name VARCHAR(100) NOT NULL,
+            dateOfBirth DATETIME,
+            PRIMARY KEY (patientid)
+          ) ENGINE=InnoDB;
+        `;
+        dbConnection.query(createTableQuery, (err) => {
+          if (err) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: messages.error.createTableError, details: err.message }));
+          } else {
+            // Table created, now execute the original query
+            dbConnection.query(queryText, (err, results) => {
+              if (err) {
+                res.writeHead(500, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ error: messages.error.queryExecutionError, details: err.message }));
+              } else {
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify(results));
+              }
+            });
+          }
+        });
       } else {
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(results));
+        // If the table exists, proceed with the query
+        dbConnection.query(queryText, (err, results) => {
+          if (err) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: messages.error.queryExecutionError, details: err.message }));
+          } else {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify(results));
+          }
+        });
       }
     });
   } else {
@@ -136,6 +175,7 @@ function processQuery(queryText, res) {
     res.end(JSON.stringify({ error: messages.error.onlySelectInsert }));
   }
 }
+
 
 const PORT = 8080;
 server.listen(PORT, () => {
